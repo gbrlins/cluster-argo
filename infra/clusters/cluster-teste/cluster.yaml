@@ -1,0 +1,70 @@
+# infra/clusters/cluster-teste/cluster.yaml
+apiVersion: provisioning.cattle.io/v1
+kind: Cluster
+metadata:
+  name: cluster-teste
+  namespace: fleet-default
+spec:
+  cloudCredentialSecretName: cattle-global-data:cc-kl7d9
+  defaultPodSecurityAdmissionConfigurationTemplateName: ''
+  kubernetesVersion: v1.34.4+rke2r1
+  localClusterAuthEndpoint:
+    enabled: false
+  rkeConfig:
+    chartValues:
+      harvester-cloud-provider:
+        global:
+          cattle:
+            clusterName: cluster-teste
+        cloudConfigPath: /var/lib/rancher/rke2/etc/config-files/cloud-provider-config
+      rke2-calico: {}
+    dataDirectories:
+      k8sDistro: ''
+      provisioning: ''
+      systemAgent: ''
+    etcd:
+      disableSnapshots: true
+      snapshotRetention: 5
+      snapshotScheduleCron: 0 */5 * * *
+    machineGlobalConfig:
+      cni: calico
+      disable-kube-proxy: false
+      etcd-expose-metrics: false
+    machinePools:
+      - name: cluster-teste-master
+        etcdRole: true
+        controlPlaneRole: true
+        workerRole: true
+        hostnamePrefix: ''
+        quantity: 1
+        unhealthyNodeTimeout: 0m
+        machineConfigRef:
+          kind: HarvesterConfig
+          name: nc-cluster-teste-cluster-teste-master-v9449
+        drainBeforeDelete: true
+    machineSelectorConfig:
+      - config:
+          cloud-provider-config: secret://fleet-default:harvesterconfigmhptb
+          cloud-provider-name: harvester
+          protect-kernel-defaults: false
+    upgradeStrategy:
+      controlPlaneConcurrency: '1'
+      controlPlaneDrainOptions:
+        deleteEmptyDirData: true
+        disableEviction: false
+        enabled: false
+        force: false
+        gracePeriod: -1
+        ignoreDaemonSets: true
+        skipWaitForDeleteTimeoutSeconds: 0
+        timeout: 120
+      workerConcurrency: '1'
+      workerDrainOptions:
+        deleteEmptyDirData: true
+        disableEviction: false
+        enabled: false
+        force: false
+        gracePeriod: -1
+        ignoreDaemonSets: true
+        skipWaitForDeleteTimeoutSeconds: 0
+        timeout: 120
