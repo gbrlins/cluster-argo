@@ -1,5 +1,5 @@
 # infra/clusters/cluster-teste/cluster.yaml
-apiVersion: provisioning.cattle.io/v1
+apiVersion: management.cattle.io/v3
 kind: Cluster
 metadata:
   name: cluster-teste
