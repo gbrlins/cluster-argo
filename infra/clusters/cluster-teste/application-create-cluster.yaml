@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra-cluster-argo
+  namespace: argo
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/gbrlins/cluster-argo.git'
+    targetRevision: HEAD
+    path: infra/clusters/cluster-teste
+  destination:
+    # URL da API do Rancher (obtida no passo 1)
+    server: 'https://192.168.86.151:6443' 
+    namespace: fleet-default
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+    - group: provisioning.cattle.io
+      kind: Cluster
+      jsonPointers:
+        - /status
+        - /metadata/annotations
+        - /metadata/labels
+        - /metadata/finalizers
+    - group: management.cattle.io
+      kind: Cluster
+      jsonPointers:
+        - /status
+        - /metadata/annotations
+        - /metadata/labels
+        - /metadata/finalizers
