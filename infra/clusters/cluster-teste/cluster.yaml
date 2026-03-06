@@ -1,8 +1,8 @@
-# infra/clusters/cluster-teste/cluster.yaml
-apiVersion: management.cattle.io/v3
+# infra/clusters/teste/cluster.yaml
+apiVersion: provisioning.cattle.io/v1
 kind: Cluster
 metadata:
-  name: cluster-teste
+  name: teste
   namespace: fleet-default
 spec:
   cloudCredentialSecretName: cattle-global-data:cc-kl7d9
@@ -15,7 +15,7 @@ spec:
       harvester-cloud-provider:
         global:
           cattle:
-            clusterName: cluster-teste
+            clusterName: teste
         cloudConfigPath: /var/lib/rancher/rke2/etc/config-files/cloud-provider-config
       rke2-calico: {}
     dataDirectories:
@@ -23,7 +23,7 @@ spec:
       provisioning: ''
       systemAgent: ''
     etcd:
-      disableSnapshots: true
+      disableSnapshots: false
       snapshotRetention: 5
       snapshotScheduleCron: 0 */5 * * *
     machineGlobalConfig:
@@ -31,7 +31,7 @@ spec:
       disable-kube-proxy: false
       etcd-expose-metrics: false
     machinePools:
-      - name: cluster-teste-master
+      - name: pool1
         etcdRole: true
         controlPlaneRole: true
         workerRole: true
@@ -40,11 +40,11 @@ spec:
         unhealthyNodeTimeout: 0m
         machineConfigRef:
           kind: HarvesterConfig
-          name: nc-cluster-teste-cluster-teste-master-v9449
+          name: nc-teste-pool1-5wx9f # <--- LIGAÇÃO COM A MÁQUINA ABAIXO
         drainBeforeDelete: true
     machineSelectorConfig:
       - config:
-          cloud-provider-config: secret://fleet-default:harvesterconfigmhptb
+          cloud-provider-config: secret://fleet-default:harvesterconfigbxbj9
           cloud-provider-name: harvester
           protect-kernel-defaults: false
     upgradeStrategy:
@@ -68,3 +68,21 @@ spec:
         ignoreDaemonSets: true
         skipWaitForDeleteTimeoutSeconds: 0
         timeout: 120
+---
+# ESTA É A PARTE QUE O RANCHER ESCONDEU NO 'EDIT AS YAML'
+apiVersion: rke-machine-config.cattle.io/v1
+kind: HarvesterConfig
+metadata:
+  name: nc-teste-pool1-5wx9f # <--- TEM DE SER EXATAMENTE IGUAL AO machineConfigRef ACIMA
+  namespace: fleet-default
+spec:
+  cpuCount: "2"
+  cpuPinning: false
+  diskInfo: '{"disks":[{"imageName":"labs/image-6f7mx","bootOrder":1,"size":40}]}'
+  diskSize: "0"
+  memorySize: "4"
+  vmNamespace: labs
+  sshUser: sles
+  networkInfo: '{"interfaces":[{"networkName":"default/local-net","macAddress":""}]}'
+  networkData: I2Nsb3VkLWNvbmZpZwpuZXR3b3JrOgogIHZlcnNpb246IDEKICBjb25maWc6CiAgICAtIHR5cGU6IHBoeXNpY2FsCiAgICAgIG5hbWU6IGV0aDAKICAgICAgc3VibmV0czoKICAgICAgICAtIHR5cGU6IGRoY3A=
+  userData: I2Nsb3VkLWNvbmZpZwpjaHBhc3N3ZDoKICBsaXN0OiB8CiAgICByb290OiQ2JFNhbFRzYUx0JDQ3d0pnT0YyQVpGS1lpU3hES004YmVSeUlNNUpZZzI4bGdFaXJ5MjVWNUZiQzRuRHVrOU9IcHhDMFh0c0prWTFPWVpOWUhXTW5UTGhYc2dQd0w1U1MuCiAgICBzbGVzOiQ2JFNhbFRzYUx0JDQ3d0pnT0YyQVpGS1lpU3hES004YmVSeUlNNUpZZzI4bGdFaXJ5MjVWNUZiQzRuRHVrOU9IcHhDMFh0c0prWTFPWVpOWUhXTW5UTGhYc2dQd0w1U1MuCiAgZXhwaXJlOiBGYWxzZQpwYWNrYWdlczoKICAtIGlwdGFibGVzCiAgLSBjdXJsCiAgLSB3Z2V0CnJ1bmNtZDoKICAtIHN1c2Vjb25uZWN0IC1lIGVyaWNvLm1lbmRvbmNhQHN1c2UuY29tIC1yIElOVEVSTkFMLVVTRS1PTkxZLWRiYjktNjVmMQ==
