@@ -4,6 +4,8 @@ kind: Cluster
 metadata:
   name: cluster-argo
   namespace: fleet-default
+  annotations:
+    field.cattle.io/description: Criado automaticamente pelo argo
 spec:
   cloudCredentialSecretName: cattle-global-data:cc-kl7d9
   defaultPodSecurityAdmissionConfigurationTemplateName: ''
@@ -40,11 +42,11 @@ spec:
         unhealthyNodeTimeout: 0m
         machineConfigRef:
           kind: HarvesterConfig
-          name: nc-cluster-argo-argo-pmmvp # <--- LIGAÇÃO COM A MÁQUINA ABAIXO
+          name: nc-cluster-argo-argo-2s5b9 # Referência à configuração da máquina
         drainBeforeDelete: true
     machineSelectorConfig:
       - config:
-          cloud-provider-config: secret://fleet-default:harvesterconfig5swf8
+          cloud-provider-config: secret://fleet-default:harvesterconfigskvrm
           cloud-provider-name: harvester
           protect-kernel-defaults: false
     upgradeStrategy:
@@ -72,22 +74,16 @@ spec:
 apiVersion: rke-machine-config.cattle.io/v1
 kind: HarvesterConfig
 metadata:
-  name: nc-cluster-argo-argo-pmmvp # TEM DE SER IGUAL AO NOME ACIMA
+  name: nc-cluster-argo-argo-2s5b9 # TEM DE SER IGUAL AO NOME ACIMA
   namespace: fleet-default
 cpuCount: '2'
-cpuPinning: false
 diskInfo: '{"disks":[{"imageName":"labs/image-6f7mx","bootOrder":1,"size":40}]}'
-enableEfi: false
-enableSecureBoot: false
-enableTpm: false
-isolateEmulatorThread: false
 memorySize: '4'
 networkData: >-
   I2Nsb3VkLWNvbmZpZwpuZXR3b3JrOgogIHZlcnNpb246IDEKICBjb25maWc6CiAgICAtIHR5cGU6IHBoeXNpY2FsCiAgICAgIG5hbWU6IGV0aDAKICAgICAgc3VibmV0czoKICAgICAgICAtIHR5cGU6IGRoY3A=
 networkInfo: '{"interfaces":[{"networkName":"default/local-net","macAddress":""}]}'
-reservedMemorySize: '-1'
 sshPort: '22'
 sshUser: sles
 userData: >-
-  I2Nsb3VkLWNvbmZpZwpjaHBhc3N3ZDoKICBsaXN0OiB8CiAgICByb290OiQ2JFNhbFRzYUx0JDQ3d0pnT0YyQVpGS1lpU3hES004YmVSeUlNNUpZZzI4bGdFaXJ5MjVWNUZiQzRuRHVrOU9IcHhDMFh0c0prWTFPWVpOWUhXTW5UTGhYc2dQd0w1U1MuCiAgICBzbGVzOiQ2JFNhbFRzYUx0JDQ3d0pnT0YyQVpGS1lpU3hES004YmVSeUlNNUpZZzI4bGdFaXJ5MjVWNUZiQzRuRHVrOU9IcHhDMFh0c0prWTFPWVpOWUhXTW5UTGhYc2dQd0w1U1MuCiAgZXhwaXJlOiBGYWxzZQpwYWNrYWdlczoKICAtIGlwdGFibGVzCiAgLSBjdXJsCiAgLSB3Z2V0CnJ1bmNtZDoKICAtIHN1c2Vjb25uZWN0IC1lIGVyaWNvLm1lbmRvbmNhQHN1c2UuY29tIC1yIElOVEVSTkFMLVVTRS1PTkxZLWRiYjktNjVmMQogIC0gc2ggLWMgJ2VjaG8gIjE5Mi4xNjguODYuMTUxIHJhbmNoZXIuY29udGV1ZG9xdWVzdGlvbmF2ZWwub3JnIHJhbmNoZXIiID4+IC9ldGMvaG9zdHMn
+  I2Nsb3VkLWNvbmZpZwpjaHBhc3N3ZDoKICBsaXN0OiB8CiAgICByb290OiQ2JFNhbFRzYUx0JDQ3d0pnT0YyQVpGS1lpU3hES004YmVSeUlNNUpZZzI4bGdFaXJ5MjVWNUZiQzRuRHVrOU9IcHhDMFh0c0prWTFPWVpOWUhXTW5UTGhYc2dQd0w1U1MuCiAgICBzbGVzOiQ2JFNhbFRzYUx0JDQ3d0pnT0YyQVpGS1lpU3hES004YmVSeUlNNUpZZzI4bGdFaXJ5MjVWNUZiQzRuRHVrOU9IcHhDMFh0c0prWTFPWVpOWUhXTW5UTGhYc2dQd0w1U1MuCiAgZXhwaXJlOiBGYWxzZQpwYWNrYWdlczoKICAtIGlwdGFibGVzCiAgLSBjdXJsCiAgLSB3Z2V0CnJ1bmNtZDoKICAtIHN1c2Vjb25uZWN0IC1lIGVyaWNvLm1lbmRvbmNhQHN1c2UuY29tIC1yIElOVEVSTkFMLVVTRS1PTkxZLWRiYjktNjVmMQogIC0gc2ggLWMgJ2VjaG8gIjE5Mi4xNjguODYuMTUxIHJhbmNoZXIuY29udGV1ZG9xdWVzdGlvbmF2ZWwub3JnIHJhbmNoZXIiID4+IC9ldGMvaG9zdHMnCiAgLSBzaCAtYyAnZWNobyAiMTkyLjE2OC44Ni4yNDUgaGFydmVzdGVyLmNvbnRldWRvcXVlc3Rpb25hdmVsLm9yZyBoYXJ2ZXN0ZXIiID4+IC9ldGMvaG9zdHMn
 vmNamespace: techday
