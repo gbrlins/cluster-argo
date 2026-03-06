@@ -40,7 +40,7 @@ spec:
         unhealthyNodeTimeout: 0m
         machineConfigRef:
           kind: HarvesterConfig
-          name: nc-teste-pool1-5wx9f # <--- LIGAÇÃO COM A MÁQUINA ABAIXO
+          name: nc-teste-pool1-5wx9f # Referência à configuração da máquina
         drainBeforeDelete: true
     machineSelectorConfig:
       - config:
@@ -69,20 +69,17 @@ spec:
         skipWaitForDeleteTimeoutSeconds: 0
         timeout: 120
 ---
-# ESTA É A PARTE QUE O RANCHER ESCONDEU NO 'EDIT AS YAML'
 apiVersion: rke-machine-config.cattle.io/v1
 kind: HarvesterConfig
 metadata:
-  name: nc-teste-pool1-5wx9f # <--- TEM DE SER EXATAMENTE IGUAL AO machineConfigRef ACIMA
+  name: nc-teste-pool1-5wx9f # TEM DE SER IGUAL AO NOME ACIMA
   namespace: fleet-default
 spec:
+  vmNamespace: default
   cpuCount: "2"
-  cpuPinning: false
-  diskInfo: '{"disks":[{"imageName":"labs/image-6f7mx","bootOrder":1,"size":40}]}'
-  diskSize: "0"
   memorySize: "4"
-  vmNamespace: labs
-  sshUser: sles
-  networkInfo: '{"interfaces":[{"networkName":"default/local-net","macAddress":""}]}'
-  networkData: I2Nsb3VkLWNvbmZpZwpuZXR3b3JrOgogIHZlcnNpb246IDEKICBjb25maWc6CiAgICAtIHR5cGU6IHBoeXNpY2FsCiAgICAgIG5hbWU6IGV0aDAKICAgICAgc3VibmV0czoKICAgICAgICAtIHR5cGU6IGRoY3A=
-  userData: I2Nsb3VkLWNvbmZpZwpjaHBhc3N3ZDoKICBsaXN0OiB8CiAgICByb290OiQ2JFNhbFRzYUx0JDQ3d0pnT0YyQVpGS1lpU3hES004YmVSeUlNNUpZZzI4bGdFaXJ5MjVWNUZiQzRuRHVrOU9IcHhDMFh0c0prWTFPWVpOWUhXTW5UTGhYc2dQd0w1U1MuCiAgICBzbGVzOiQ2JFNhbFRzYUx0JDQ3d0pnT0YyQVpGS1lpU3hES004YmVSeUlNNUpZZzI4bGdFaXJ5MjVWNUZiQzRuRHVrOU9IcHhDMFh0c0prWTFPWVpOWUhXTW5UTGhYc2dQd0w1U1MuCiAgZXhwaXJlOiBGYWxzZQpwYWNrYWdlczoKICAtIGlwdGFibGVzCiAgLSBjdXJsCiAgLSB3Z2V0CnJ1bmNtZDoKICAtIHN1c2Vjb25uZWN0IC1lIGVyaWNvLm1lbmRvbmNhQHN1c2UuY29tIC1yIElOVEVSTkFMLVVTRS1PTkxZLWRiYjktNjVmMQ==
+  diskSize: "40"
+  diskBus: "virtio"
+  imageName: "default/image-xxxxx" # Ajuste para a sua imagem Harvester
+  networkName: "default/sua-rede"  # Ajuste para a sua rede Harvester
+  sshUser: "ubuntu"
