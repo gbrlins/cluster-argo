@@ -44,8 +44,9 @@ spec:
       spec:
         targetNamespace: kube-system
         bootstrap: true
-        repo: https://charts.harvesterhci.io/
-        chart: harvester-cloud-provide
+        repo: https://raw.githubusercontent.com/rancher/charts/dev-v2.9
+        chart: harvester-cloud-provider
+        version: 104.0.2+up0.2.6
     chartValues:
       harvester-cloud-provider:
         global:
