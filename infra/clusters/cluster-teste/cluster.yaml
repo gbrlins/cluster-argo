@@ -3,9 +3,7 @@ apiVersion: provisioning.cattle.io/v1
 kind: Cluster
 metadata:
   name: cluster-argo
-  annotations:
-    field.cattle.io/description: Criado automaticamente pelo ArgoCD
-    cloudprovider.harvesterhci.io/ipam: dhcp
+  annotations: {}
   labels: {}
   namespace: fleet-default
 spec:
@@ -23,7 +21,23 @@ spec:
   localClusterAuthEndpoint:
     enabled: false
   rkeConfig:
-    additionalManifest:  |
+    additionalManifest: |-
+      apiVersion: helm.cattle.io/v1
+      kind: HelmChart
+      metadata:
+        name: harvester-cloud-provider
+        namespace: kube-system
+      spec:
+        targetNamespace: kube-system
+        bootstrap: true
+        repo: https://raw.githubusercontent.com/rancher/charts/dev-v2.9
+        chart: harvester-cloud-provider
+        version:  104.0.2+up0.2.6
+        helmVersion: v3
+        valuesContent: |-
+          global:
+            cattle:
+              clusterName: cluster-argo
       ---
       apiVersion: helm.cattle.io/v1
       kind: HelmChart
@@ -35,18 +49,6 @@ spec:
         repo: https://piraeus.io/helm-charts/
         targetNamespace: kube-system
         bootstrap: true
-      ---
-      apiVersion: helm.cattle.io/v1
-      kind: HelmChart
-      metadata:
-        name: harvester-cloud-provider
-        namespace: kube-system
-      spec:
-        targetNamespace: kube-system
-        bootstrap: true
-        repo: https://raw.githubusercontent.com/rancher/charts/dev-v2.9
-        chart: harvester-cloud-provider
-        version: 104.0.2+up0.2.6
     chartValues:
       harvester-cloud-provider:
         global:
@@ -76,12 +78,12 @@ spec:
         unhealthyNodeTimeout: 0m
         machineConfigRef:
           kind: HarvesterConfig
-          name: nc-cluster-argo-pool1-wx6nj
+          name: nc-cluster-argo-pool1-jjbc9
         drainBeforeDelete: true
         labels: {}
     machineSelectorConfig:
       - config:
-          cloud-provider-config: secret://fleet-default:harvesterconfigk7bcc
+          cloud-provider-config: secret://fleet-default:harvesterconfig5pbkw
           cloud-provider-name: harvester
           protect-kernel-defaults: false
     networking: {}
@@ -115,20 +117,42 @@ spec:
 apiVersion: rke-machine-config.cattle.io/v1
 kind: HarvesterConfig
 metadata:
-  name: nc-cluster-argo-pool1-wx6nj
+  name: nc-cluster-argo-pool1-jjbc9
   namespace: fleet-default
   annotations:
     field.cattle.io/creatorId: user-xtskb
+    ownerBindingsCreated: 'true'
+  generateName: nc-cluster-argo-pool1-
+cloudConfig: ''
+clusterId: ''
+clusterName: ''
+clusterType: ''
 cpuCount: '2'
-memorySize: '4'
-diskInfo: '{"disks":[{"imageName":"default/image-l4c8b","bootOrder":1,"size":40}]}'
-networkInfo: '{"interfaces":[{"networkName":"default/local-net","macAddress":""}]}'
-sshUser: sles
-sshPort: '22'
-vmNamespace: techday
-reservedMemorySize: '-1'
 cpuPinning: false
+diskBus: ''
+diskInfo: '{"disks":[{"imageName":"default/image-l4c8b","bootOrder":1,"size":40}]}'
+diskSize: '0'
+enableEfi: false
+enableSecureBoot: false
+enableTpm: false
+imageName: ''
+isolateEmulatorThread: false
+keyPairName: ''
+kubeconfigContent: ''
+memorySize: '4'
 networkData: >-
   I2Nsb3VkLWNvbmZpZwpuZXR3b3JrOgogIHZlcnNpb246IDEKICBjb25maWc6CiAgICAtIHR5cGU6IHBoeXNpY2FsCiAgICAgIG5hbWU6IGV0aDAKICAgICAgc3VibmV0czoKICAgICAgICAtIHR5cGU6IGRoY3A=
+networkInfo: '{"interfaces":[{"networkName":"default/local-net","macAddress":""}]}'
+networkModel: ''
+networkName: ''
+networkType: ''
+reservedMemorySize: '-1'
+sshPassword: ''
+sshPort: '22'
+sshPrivateKeyPath: ''
+sshUser: sles
 userData: >-
-  I2Nsb3VkLWNvbmZpZwpjaHBhc3N3ZDoKICBsaXN0OiB8CiAgICByb290OiQ2JFNhbFRzYUx0JDQ3d0pnT0YyQVpGS1lpU3hES004YmVSeUlNNUpZZzI4bGdFaXJ5MjVWNUZiQzRuRHVrOU9IcHhDMFh0c0prWTFPWVpOWUhXTW5UTGhYc2dQd0w1U1MuCiAgICBzbGVzOiQ2JFNhbFRzYUx0JDQ3d0pnT0YyQVpGS1lpU3hES004YmVSeUlNNUpZZzI4bGdFaXJ5MjVWNUZiQzRuRHVrOU9IcHhDMFh0c0prWTFPWVpOWUhXTW5UTGhYc2dQd0w1U1MuCiAgZXhwaXJlOiBGYWxzZQpwYWNrYWdlczoKICAtIGlwdGFibGVzCiAgLSBjdXJsCiAgLSB3Z2V0CnJ1bmNtZDoKICAtIHN1c2Vjb25uZWN0IC1lIGVyaWNvLm1lbmRvbmNhQHN1c2UuY29tIC1yIElOVEVSTkFMLVVTRS1PTkxZLWRiYjktNjVmMQ==
+  I2Nsb3VkLWNvbmZpZwpjaHBhc3N3ZDoKICBsaXN0OiB8CiAgICByb290OiQ2JFNhbFRzYUx0JDQ3d0pnT0YyQVpGS1lpU3hES004YmVSeUlNNUpZZzI4bGdFaXJ5MjVWNUZiQzRuRHVrOU9IcHhDMFh0c0prWTFPWVpOWUhXTW5UTGhYc2dQd0w1U1MuCiAgICBzbGVzOiQ2JFNhbFRzYUx0JDQ3d0pnT0YyQVpGS1lpU3hES004YmVSeUlNNUpZZzI4bGdFaXJ5MjVWNUZiQzRuRHVrOU9IcHhDMFh0c0prWTFPWVpOWUhXTW5UTGhYc2dQd0w1U1MuCiAgZXhwaXJlOiBGYWxzZQpwYWNrYWdlczoKICAtIGlwdGFibGVzCiAgLSBjdXJsCiAgLSB3Z2V0CnJ1bmNtZDoKICAtIHN1c2Vjb25uZWN0IC1lIGVyaWNvLm1lbmRvbmNhQHN1c2UuY29tIC1yIElOVEVSTkFMLVVTRS1PTkxZLWRiYjktNjVmMQogIC0gc2ggLWMgJ2VjaG8gIjE5Mi4xNjguODYuMTUxIHJhbmNoZXIuY29udGV1ZG9xdWVzdGlvbmF2ZWwub3JnIHJhbmNoZXIiID4+IC9ldGMvaG9zdHMnCiAgLSBzaCAtYyAnZWNobyAiMTkyLjE2OC44Ni4yNDUgaGFydmVzdGVyLmNvbnRldWRvcXVlc3Rpb25hdmVsLm9yZyBoYXJ2ZXN0ZXIiID4+IC9ldGMvaG9zdHMn
+vgpuInfo: ''
+vmAffinity: ''
+vmNamespace: techday
