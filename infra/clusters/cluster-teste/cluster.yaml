@@ -1,3 +1,4 @@
+# infra/clusters/cluster-argo/cluster.yaml
 apiVersion: provisioning.cattle.io/v1
 kind: Cluster
 metadata:
@@ -23,7 +24,7 @@ spec:
       spec:
         targetNamespace: kube-system
         bootstrap: true
-        repo: [https://charts.harvesterhci.io/](https://charts.harvesterhci.io/)
+        repo: https://charts.harvesterhci.io/
         chart: harvester-cloud-provider
     chartValues:
       harvester-cloud-provider:
