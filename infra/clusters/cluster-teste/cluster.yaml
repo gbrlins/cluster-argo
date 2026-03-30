@@ -1,4 +1,3 @@
-# infra/clusters/cluster-argo/cluster.yaml
 apiVersion: provisioning.cattle.io/v1
 kind: Cluster
 metadata:
@@ -13,6 +12,19 @@ spec:
   localClusterAuthEndpoint:
     enabled: false
   rkeConfig:
+    # Injeção manual do Harvester Cloud Provider no RKE2
+    additionalManifest: |
+      ---
+      apiVersion: helm.cattle.io/v1
+      kind: HelmChart
+      metadata:
+        name: harvester-cloud-provider
+        namespace: kube-system
+      spec:
+        targetNamespace: kube-system
+        bootstrap: true
+        repo: [https://charts.harvesterhci.io/](https://charts.harvesterhci.io/)
+        chart: harvester-cloud-provider
     chartValues:
       harvester-cloud-provider:
         global:
@@ -85,5 +97,5 @@ networkInfo: '{"interfaces":[{"networkName":"default/local-net","macAddress":""}
 sshPort: '22'
 sshUser: sles
 userData: >-
-  I2Nsb3VkLWNvbmZpZwpjaHBhc3N3ZDoKICBsaXN0OiB8CiAgICByb290OiQ2JFNhbFRzYUx0JDQ3d0pnT0YyQVpGS1lpU3hES004YmVSeUlNNUpZZzI4bGdFaXJ5MjVWNUZiQzRuRHVrOU9IcHhDMFh0c0prWTFPWVpOWUhXTW5UTGhYc2dQd0w1U1MuCiAgICBzbGVzOiQ2JFNhbFRzYUx0JDQ3d0pnT0YyQVpGS1lpU3hES004YmVSeUlNNUpZZzI4bGdFaXJ5MjVWNUZiQzRuRHVrOU9IcHhDMFh0c0prWTFPWVpOWUhXTW5UTGhYc2dQd0w1U1MuCiAgZXhwaXJlOiBGYWxzZQpwYWNrYWdlczoKICAtIGlwdGFibGVzCiAgLSBjdXJsCiAgLSB3Z2V0CnJ1bmNtZDoKICAtIHN1c2Vjb25uZWN0IC1lIGVyaWNvLm1lbmRvbmNhQHN1c2UuY29tIC1yIElOVEVSTkFMLVVTRS1PTkxZLWRiYjktNjVmMQogIC0gc2ggLWMgJ2VjaG8gIjE5Mi4xNjguODYuMTUxIHJhbmNoZXIuY29udGV1ZG9xdWVzdGlvbmF2ZWwub3JnIHJhbmNoZXIiID4+IC9ldGMvaG9zdHMnCiAgLSBzaCAtYyAnZWNobyAiMTkyLjE2OC44Ni4yNDUgaGFydmVzdGVyLmNvbnRldWRvcXVlc3Rpb25hdmVsLm9yZyBoYXJ2ZXN0ZXIiID4+IC9ldGMvaG9zdHMn
+  I2Nsb3VkLWNvbmZpZwpjaHBhc3N3ZDoKICBsaXN0OiB8CiAgICByb290OiQ2JFNhbFRzYUx0JDQ3d0pnT0YyQVpGS1lpU3hES004YmVSeUlNNUpZZzI4bGdFaXJ5MjVWNUZiQzRuRHVrOU9IcHhDMFh0c0prWTFPWVpOWUhXTW5UTGhYc2dQd0w1U1MuCiAgICBzbGVzOiQ2JFNhbFRzYUx0JDQ3d0pnT0YyQVpGS1lpU3hES004YmVSeUlNNUpZZzI4bGdFaXJ5MjVWNUZiQzRuRHVrOU9IcHhDMFh0c0prWTFPWVpOWUhXTW5UTGhYc2dQd0w1U1MuCiAgZXhwaXJlOiBGYWxzZQpwYWNrYWdlczoKICAtIGlwdGFibGVzCiAgLSBjdXJsCiAgLSB3Z2V0CndyaXRlX2ZpbGVzOgogIC0gcGF0aDogL29wdC9zY3JpcHQtZXh0ZXJuby5zaAogICAgcGVybWlzc2lvbnM6ICcwNzU1JwogICAgY29udGVudDogfAogICAgICAjIS9iaW4vYmFzaAogICAgICAjIFNldSBzY3JpcHQgZXh0ZXJubyBkbyBIYXJ2ZXN0ZXIgQ2xvdWQgUHJvdmlkZXIgYXF1aQogICAgICBlY2hvICJDb25maWd1cmFuZG8gZGVwZW5kZW5jaWFzIGRvIEhhcnZlc3Rlci4uLiIKcnVuY21kOgogIC0gc3VzZWNvbm5lY3QgLWUgZXJpY28ubWVuZG9uY2FAc3VzZS5jb20gLXIgSU5URVJOQUwtVVNFLU9OTFktZGJiOS02NWYxCiAgLSBzaCAtYyAnZWNobyAiMTkyLjE2OC44Ni4xNTEgcmFuY2hlci5jb250ZXVkb3F1ZXN0aW9uYXZlbC5vcmcgcmFuY2hlciIgPj4gL2V0Yy9ob3N0cycKICAtIHNoIC1jICdlY2hvICIxOTIuMTY4Ljg2LjI0NSBoYXJ2ZXN0ZXIuY29udGV1ZG9xdWVzdGlvbmF2ZWwub3JnIGhhcnZlc3RlciIgPj4gL2V0Yy9ob3N0cycKICAtIC9vcHQvc2NyaXB0LWV4dGVybm8uc2g=
 vmNamespace: techday
