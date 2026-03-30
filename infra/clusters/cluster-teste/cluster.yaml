@@ -32,7 +32,7 @@ spec:
         namespace: kube-system
       spec:
         chart: snapshot-controller-crds
-        repo: [https://piraeus.io/helm-charts/](https://piraeus.io/helm-charts/)
+        repo: https://piraeus.io/helm-charts/
         targetNamespace: kube-system
         bootstrap: true
       ---
@@ -44,7 +44,7 @@ spec:
       spec:
         targetNamespace: kube-system
         bootstrap: true
-        repo: [https://charts.harvesterhci.io/](https://charts.harvesterhci.io/)
+        repo: https://charts.harvesterhci.io/
         chart: harvester-cloud-provide
     chartValues:
       harvester-cloud-provider:
