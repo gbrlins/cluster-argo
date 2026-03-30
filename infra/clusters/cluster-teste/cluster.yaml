@@ -23,23 +23,29 @@ spec:
   localClusterAuthEndpoint:
     enabled: false
   rkeConfig:
-    additionalManifest: |2-
-       apiVersion: helm.cattle.io/v1
-       kind: HelmChart
-       metadata:
-          name: harvester-cloud-provider
-          namespace: kube-system
-       spec:
-          targetNamespace: kube-system
-          bootstrap: true
-          repo: https://raw.githubusercontent.com/rancher/charts/dev-v2.9
-          chart: harvester-cloud-provider
-          version:  104.0.2+up0.2.6
-          helmVersion: v3
-          valuesContent: |-
-            global:
-              cattle:
-                clusterName: cluster-argo
+    additionalManifest:  |
+      ---
+      apiVersion: helm.cattle.io/v1
+      kind: HelmChart
+      metadata:
+        name: snapshot-controller-crds
+        namespace: kube-system
+      spec:
+        chart: snapshot-controller-crds
+        repo: [https://piraeus.io/helm-charts/](https://piraeus.io/helm-charts/)
+        targetNamespace: kube-system
+        bootstrap: true
+      ---
+      apiVersion: helm.cattle.io/v1
+      kind: HelmChart
+      metadata:
+        name: harvester-cloud-provider
+        namespace: kube-system
+      spec:
+        targetNamespace: kube-system
+        bootstrap: true
+        repo: [https://charts.harvesterhci.io/](https://charts.harvesterhci.io/)
+        chart: harvester-cloud-provide
     chartValues:
       harvester-cloud-provider:
         global:
