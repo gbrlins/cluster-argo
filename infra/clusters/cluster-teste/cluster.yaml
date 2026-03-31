@@ -7,7 +7,7 @@ metadata:
   labels: {}
   namespace: fleet-default
 spec:
-  cloudCredentialSecretName: cattle-global-data:cc-zs2c6
+  cloudCredentialSecretName: cattle-global-data:cc-kl7d9
   clusterAgentDeploymentCustomization:
     appendTolerations: []
     overrideAffinity: {}
@@ -112,7 +112,7 @@ clusterType: ''
 cpuCount: '2'
 cpuPinning: false
 diskBus: ''
-diskInfo: '{"disks":[{"imageName":"images/image-crplc","bootOrder":1,"size":40}]}'
+diskInfo: '{"disks":[{"imageName":"labs/image-dd6jz","bootOrder":1,"size":40}]}'
 diskSize: '0'
 enableEfi: false
 enableSecureBoot: false
@@ -125,60 +125,17 @@ kubeconfigContent: ''
 memorySize: '4'
 metadata:
   annotations:
-    field.cattle.io/creatorId: user-r95r6
-    ownerBindingsCreated: 'true'
-  creationTimestamp: '2026-03-31T19:31:36Z'
   generateName: nc-cluster-argo-pool1-
-  generation: 1
   managedFields:
     - apiVersion: rke-machine-config.cattle.io/v1
-      fieldsType: FieldsV1
-      fieldsV1:
-        f:cloudConfig: {}
-        f:clusterId: {}
-        f:clusterName: {}
-        f:clusterType: {}
-        f:cpuCount: {}
-        f:cpuPinning: {}
-        f:diskBus: {}
-        f:diskInfo: {}
-        f:diskSize: {}
-        f:enableEfi: {}
-        f:enableSecureBoot: {}
-        f:enableTpm: {}
-        f:imageName: {}
-        f:isolateEmulatorThread: {}
-        f:keyPairName: {}
-        f:kubeconfigContent: {}
-        f:memorySize: {}
-        f:metadata:
-          f:annotations:
-            f:ownerBindingsCreated: {}
-          f:generateName: {}
-        f:networkData: {}
-        f:networkInfo: {}
-        f:networkModel: {}
-        f:networkName: {}
-        f:networkType: {}
-        f:reservedMemorySize: {}
-        f:sshPassword: {}
-        f:sshPort: {}
-        f:sshPrivateKeyPath: {}
-        f:sshUser: {}
-        f:userData: {}
-        f:vgpuInfo: {}
-        f:vmAffinity: {}
-        f:vmNamespace: {}
       manager: rancher
-      operation: Update
-      time: '2026-03-31T19:31:36Z'
   name: nc-cluster-argo-pool1-5dnmb
   namespace: fleet-default
   resourceVersion: '80637'
   uid: b3ee210c-33de-4cd2-8345-e378b191f920
 networkData: >-
   bmV0d29yazoKICB2ZXJzaW9uOiAyCiAgZXRoZXJuZXRzOgogICAgZXRoMDoKICAgICAgZGhjcDQ6IHRydWUKICAgICAgZGhjcDY6IGZhbHNlCiAgICAgIG5hbWVzZXJ2ZXJzOgogICAgICAgIGFkZHJlc3NlczoKICAgICAgICAgIC0gMTkyLjE2OC4xLjI0CiAgICAgICAgICAtIDEuMS4xLjE=
-networkInfo: '{"interfaces":[{"networkName":"network/vm-net","macAddress":""}]}'
+networkInfo: '{"interfaces":[{"networkName":"default/local-net","macAddress":""}]}'
 networkModel: ''
 networkName: ''
 networkType: ''
