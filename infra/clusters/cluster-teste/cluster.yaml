@@ -130,6 +130,45 @@ metadata:
   creationTimestamp: '2026-03-31T20:46:16Z'
   generateName: nc-cluster-argo-argo-
   generation: 1
+  managedFields:
+    - apiVersion: rke-machine-config.cattle.io/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:cloudConfig: {}
+        f:clusterId: {}
+        f:clusterName: {}
+        f:clusterType: {}
+        f:cpuCount: {}
+        f:cpuPinning: {}
+        f:diskBus: {}
+        f:diskInfo: {}
+        f:diskSize: {}
+        f:enableEfi: {}
+        f:enableSecureBoot: {}
+        f:enableTpm: {}
+        f:imageName: {}
+        f:isolateEmulatorThread: {}
+        f:keyPairName: {}
+        f:kubeconfigContent: {}
+        f:memorySize: {}
+        f:metadata:
+          f:annotations:
+            f:ownerBindingsCreated: {}
+          f:generateName: {}
+        f:networkData: {}
+        f:networkInfo: {}
+        f:networkModel: {}
+        f:networkName: {}
+        f:networkType: {}
+        f:reservedMemorySize: {}
+        f:sshPassword: {}
+        f:sshPort: {}
+        f:sshPrivateKeyPath: {}
+        f:sshUser: {}
+        f:userData: {}
+        f:vgpuInfo: {}
+        f:vmAffinity: {}
+        f:vmNamespace: {}
       manager: rancher
       operation: Update
       time: '2026-03-31T20:46:16Z'
@@ -153,3 +192,4 @@ userData: >-
 vgpuInfo: ''
 vmAffinity: ''
 vmNamespace: vms
+
