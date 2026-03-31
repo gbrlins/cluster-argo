@@ -5,7 +5,7 @@ metadata:
   name: argo-cluster
   namespace: fleet-default
 spec:
-  cloudCredentialSecretName: cattle-global-data:cc-kk8zm
+  cloudCredentialSecretName: cattle-global-data:cc-zs2c6
   clusterAgentDeploymentCustomization:
     appendTolerations: []
     overrideAffinity: {}
