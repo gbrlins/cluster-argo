@@ -19,23 +19,6 @@ spec:
   localClusterAuthEndpoint:
     enabled: false
   rkeConfig:
-    additionalManifest: |-
-      apiVersion: helm.cattle.io/v1
-      kind: HelmChart
-      metadata:
-        name: harvester-cloud-provider
-        namespace: kube-system
-      spec:
-        targetNamespace: kube-system
-        bootstrap: true
-        repo: https://raw.githubusercontent.com/rancher/charts/dev-v2.9
-        chart: harvester-cloud-provider
-        version: 104.0.2+up0.2.6
-        helmVersion: v3
-        valuesContent: |-
-          global:
-            cattle:
-              clusterName: argo-cluster
     chartValues:
       harvester-cloud-provider:
         global:
@@ -48,7 +31,7 @@ spec:
       provisioning: ''
       systemAgent: ''
     etcd:
-      disableSnapshots: true
+      disableSnapshots: false
       snapshotRetention: 5
       snapshotScheduleCron: 0 */5 * * *
     machineGlobalConfig:
@@ -65,12 +48,12 @@ spec:
         unhealthyNodeTimeout: 0m
         machineConfigRef:
           kind: HarvesterConfig
-          name: nc-argo-cluster-pool1-t7jzm
+          name: nc-argo-cluster-pool1-qtpw7
         drainBeforeDelete: true
         labels: {}
     machineSelectorConfig:
       - config:
-          cloud-provider-config: secret://fleet-default:harvesterconfigct72s
+          cloud-provider-config: secret://fleet-default:harvesterconfigvnzt2
           cloud-provider-name: harvester
           protect-kernel-defaults: false
     networking: {}
@@ -104,21 +87,22 @@ spec:
 apiVersion: rke-machine-config.cattle.io/v1
 kind: HarvesterConfig
 metadata:
-  name: nc-argo-cluster-pool1-t7jzm
+  name: nc-argo-cluster-pool1-qtpw7
   namespace: fleet-default
-  generateName: nc-argo-cluster-pool1-
-spec:
+spec: # Nota: Em algumas versões do Rancher, os campos abaixo ficam dentro de 'spec' ou na raiz
   cpuCount: '2'
   cpuPinning: false
-  diskInfo: '{"disks":[{"imageName":"images/image-crplc","bootOrder":1,"size":40}]}'
-  diskSize: '0'
   memorySize: '4'
-  reservedMemorySize: '-1'
-  vmNamespace: techday
+  diskSize: '0'
+  diskBus: ''
+  imageName: 'images/image-crplc' # ADICIONE O NOME DA IMAGEM AQUI PARA CORRIGIR O ERRO
+  diskInfo: '{"disks":[{"imageName":"images/image-crplc","bootOrder":1,"size":40}]}'
+  networkInfo: '{"interfaces":[{"networkName":"network/vm-net","macAddress":""}]}'
   sshUser: sles
   sshPort: '22'
-  networkInfo: '{"interfaces":[{"networkName":"network/vm-net","macAddress":""}]}'
+  vmNamespace: vms
+  reservedMemorySize: '-1'
   networkData: >-
-    I2Nsb3VkLWNvbmZpZwpuZXR3b3JrOgogIHZlcnNpb246IDEKICBjb25maWc6CiAgICAtIHR5cGU6IHBoeXNpY2FsCiAgICAgIG5hbWU6IGV0aDAKICAgICAgc3VibmV0czoKICAgICAgICAtIHR5cGU6IGRoY3A=
+    bmV0d29yazoKICB2ZXJzaW9uOiAyCiAgZXRoZXJuZXRzOgogICAgZXRoMDoKICAgICAgZGhjcDQ6IGZhbHNlCiAgICAgIGFkZHJlc3NlczoKICAgICAgICAtIDE5Mi4xNjguMS40Ny8yNAogICAgICBnYXRld2F5NDogMTkyLjE2OC4xLjEKICAgICAgbmFtZXNlcnZlcnM6CiAgICAgICAgc2VhcmNoOiBbZ2Vla29sb2NhbC5jb21dCiAgICAgICAgYWRkcmVzc2VzOgogICAgICAgICAgLSAxOTIuMTY4LjEuMjQKICAgICAgICAgIC0gMjA2LjAuMjAuMzcKICAgICAgICAgIC0gMS4xLjEuMQogICAgICByb3V0ZXM6CiAgICAgICAgLSB0bzogMTkyLjE2OC4xLjAvMjQKICAgICAgICAgIHZpYTogMTkyLjE2OC4xLjE=
   userData: >-
     I2Nsb3VkLWNvbmZpZwpjaHBhc3N3ZDoKICBsaXN0OiB8CiAgICByb290OiQ2JFNhbFRzYUx0JDQ3d0pnT0YyQVpGS1lpU3hES004YmVSeUlNNUpZZzI4bGdFaXJ5MjVWNUZiQzRuRHVrOU9IcHhDMFh0c0prWTFPWVpOWUhXTW5UTGhYc2dQd0w1U1MuCiAgICBzbGVzOiQ2JFNhbFRzYUx0JDQ3d0pnT0YyQVpGS1lpU3hES004YmVSeUlNNUpZZzI4bGdFaXJ5MjVWNUZiQzRuRHVrOU9IcHhDMFh0c0prWTFPWVpOWUhXTW5UTGhYc2dQd0w1U1MuCiAgZXhwaXJlOiBGYWxzZQpydW5jbWQ6CiAgLSBzdXNlY29ubmVjdCAtZSBlcmljby5tZW5kb25jYUBzdXNlLmNvbSAtciBJTlRFUk5BTC1VU0UtT05MWS1kYmI5LTY1ZjEKcGFja2FnZXM6CiAgLSBpcHRhYmxlcwogIC0gY3VybAogIC0gd2dldA==
