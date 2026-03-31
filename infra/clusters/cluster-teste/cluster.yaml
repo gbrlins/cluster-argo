@@ -2,7 +2,9 @@
 apiVersion: provisioning.cattle.io/v1
 kind: Cluster
 metadata:
-  name: argo-cluster
+  name: cluster-argo
+  annotations:
+    field.cattle.io/description: Criado automatico pelo argo
   namespace: fleet-default
 spec:
   cloudCredentialSecretName: cattle-global-data:cc-zs2c6
@@ -19,12 +21,24 @@ spec:
   localClusterAuthEndpoint:
     enabled: false
   rkeConfig:
+    additionalManifest: |2-
+        apiVersion: helm.cattle.io/v1
+        kind: HelmChart
+        metadata:
+          name: harvester-cloud-provider
+          namespace: kube-system
+        spec:
+          targetNamespace: kube-system
+          bootstrap: true
+          repo: https://raw.githubusercontent.com/rancher/charts/dev-v2.9
+          chart: harvester-cloud-provider
+          version: 104.0.2+up0.2.6
+          helmVersion: v3
+          valuesContent: |-
+            global:
+              cattle:
+                clusterName: cluster-argo
     chartValues:
-      harvester-cloud-provider:
-        global:
-          cattle:
-            clusterName: argo-cluster
-        cloudConfigPath: /var/lib/rancher/rke2/etc/config-files/cloud-provider-config
       rke2-calico: {}
     dataDirectories:
       k8sDistro: ''
@@ -48,13 +62,12 @@ spec:
         unhealthyNodeTimeout: 0m
         machineConfigRef:
           kind: HarvesterConfig
-          name: nc-argo-cluster-pool1-qtpw7
+          name: nc-cluster-argo-pool1-tbbtv
         drainBeforeDelete: true
         labels: {}
     machineSelectorConfig:
       - config:
-          cloud-provider-config: secret://fleet-default:harvesterconfigvnzt2
-          cloud-provider-name: harvester
+          cloud-provider-name: external
           protect-kernel-defaults: false
     networking: {}
     registries:
@@ -83,26 +96,41 @@ spec:
         timeout: 120
   machineSelectorConfig:
     - config: {}
+__clone: true
 ---
 apiVersion: rke-machine-config.cattle.io/v1
 kind: HarvesterConfig
-metadata:
-  name: nc-argo-cluster-pool1-qtpw7
-  namespace: fleet-default
-spec: # Nota: Em algumas versões do Rancher, os campos abaixo ficam dentro de 'spec' ou na raiz
-  cpuCount: '2'
-  cpuPinning: false
-  memorySize: '4'
-  diskSize: '0'
-  diskBus: ''
-  imageName: 'images/image-crplc' # ADICIONE O NOME DA IMAGEM AQUI PARA CORRIGIR O ERRO
-  diskInfo: '{"disks":[{"imageName":"images/image-crplc","bootOrder":1,"size":40}]}'
-  networkInfo: '{"interfaces":[{"networkName":"network/vm-net","macAddress":""}]}'
-  sshUser: sles
-  sshPort: '22'
-  vmNamespace: vms
-  reservedMemorySize: '-1'
-  networkData: >-
-    bmV0d29yazoKICB2ZXJzaW9uOiAyCiAgZXRoZXJuZXRzOgogICAgZXRoMDoKICAgICAgZGhjcDQ6IGZhbHNlCiAgICAgIGFkZHJlc3NlczoKICAgICAgICAtIDE5Mi4xNjguMS40Ny8yNAogICAgICBnYXRld2F5NDogMTkyLjE2OC4xLjEKICAgICAgbmFtZXNlcnZlcnM6CiAgICAgICAgc2VhcmNoOiBbZ2Vla29sb2NhbC5jb21dCiAgICAgICAgYWRkcmVzc2VzOgogICAgICAgICAgLSAxOTIuMTY4LjEuMjQKICAgICAgICAgIC0gMjA2LjAuMjAuMzcKICAgICAgICAgIC0gMS4xLjEuMQogICAgICByb3V0ZXM6CiAgICAgICAgLSB0bzogMTkyLjE2OC4xLjAvMjQKICAgICAgICAgIHZpYTogMTkyLjE2OC4xLjE=
-  userData: >-
-    I2Nsb3VkLWNvbmZpZwpjaHBhc3N3ZDoKICBsaXN0OiB8CiAgICByb290OiQ2JFNhbFRzYUx0JDQ3d0pnT0YyQVpGS1lpU3hES004YmVSeUlNNUpZZzI4bGdFaXJ5MjVWNUZiQzRuRHVrOU9IcHhDMFh0c0prWTFPWVpOWUhXTW5UTGhYc2dQd0w1U1MuCiAgICBzbGVzOiQ2JFNhbFRzYUx0JDQ3d0pnT0YyQVpGS1lpU3hES004YmVSeUlNNUpZZzI4bGdFaXJ5MjVWNUZiQzRuRHVrOU9IcHhDMFh0c0prWTFPWVpOWUhXTW5UTGhYc2dQd0w1U1MuCiAgZXhwaXJlOiBGYWxzZQpydW5jbWQ6CiAgLSBzdXNlY29ubmVjdCAtZSBlcmljby5tZW5kb25jYUBzdXNlLmNvbSAtciBJTlRFUk5BTC1VU0UtT05MWS1kYmI5LTY1ZjEKcGFja2FnZXM6CiAgLSBpcHRhYmxlcwogIC0gY3VybAogIC0gd2dldA==
+
+cpuCount: "2"
+cpuPinning: false
+
+memorySize: "4"
+reservedMemorySize: "-1"
+
+diskInfo: '{"disks":[{"imageName":"images/image-crplc","bootOrder":1,"size":40}]}'
+diskSize: "0"
+diskBus: ""
+
+enableEfi: false
+enableSecureBoot: false
+enableTpm: false
+
+imageName: ""
+keyPairName: ""
+isolateEmulatorThread: false
+
+networkData: >-
+  bmV0d29yazoKICB2ZXJzaW9uOiAyCiAgZXRoZXJuZXRzOgogICAgZXRoMDoKICAgICAgZGhjcDQ6IHRydWUKICAgICAgZGhjcDY6IGZhbHNlCiAgICAgIG5hbWVzZXJ2ZXJzOgogICAgICAgIGFkZHJlc3NlczoKICAgICAgICAgIC0gMTkyLjE2OC4xLjI0CiAgICAgICAgICAtIDEuMS4xLjE=
+
+networkInfo: '{"interfaces":[{"networkName":"network/vm-net","macAddress":""}]}'
+networkModel: ""
+networkName: ""
+networkType: ""
+
+sshUser: sles
+sshPort: "22"
+sshPassword: ""
+sshPrivateKeyPath: ""
+
+userData: >-
+  I2Nsb3VkLWNvbmZpZwp3cml0ZV9maWxlczoKLSBlbmNvZGluZzogYjY0CiAgY29udGVudDogWVhCcFZtVnljMmx2YmpvZ2RqRUtZMngxYzNSbGNuTTZDaTBnWTJ4MWMzUmxjam9LSUNBZ0lHTmxjblJwWm1sallYUmxMV0YxZEdodmNtbDBlUzFrWVhSaE9pQk1VekIwVEZNeFExSlZaRXBVYVVKRVVsWktWVk5WV2twUk1FWlZVbE13ZEV4VE1IUkRhekZLVTFWS2JHRnJUa1JSVmtseVdqQkdNMU5WU2tKYU1HeERVVlZTUWxNd1NtNWFNMFp2WVRKd1VGVkdSbEpTUlVaeFVWZDBUbFV3YkROVFZVWmFVa1phVWxWVlVrVlJiWGcxV1ZSS1ZtVlZlRmxVYlhkTFdUSTFZV0pIVG5CTlYzQmFWbFZHTkZSdWNGcGxSVGxWVWxod1QxWkhUalZVVlVrd1YwVlNWVk5VUms1V1JVWTJWRlpTUm1WVk1YRlhXR2hPWWtjNVdWSkdVazVOVlRGVlVWaHNVRlpGVmpWVVYzQmFaVUZ3VG1KSE9UTlRhMUpHWVZVeFJGRlZaRUpOVmxaR1VWaGtNMWR0VG5Sa1IzaE9ZVlJHTmxkc2FFdE5iSEJaVTFoU1drMXJXa0pVVmxKcVRXc3hWV0V6YUU1bGJGVjZWRmR3UTFkck1VTlVWV1JEWlZoR1NFTnNUazVPUkd4Q1dqQldTRkV3VG5oU01VNU9Ua1JzUW1Rd1ZrbFJWRUpLVVZWS1RHRlZhSFpPYWxaeVMzcG9ZVk5WZEVKUFdFSkxTekJhTkZGVmFGQlZSVlp4WWtSc1NsSXlhSEprYWtwT1N6QnNSRTVxVlV0alJHeHFUbFJLVTFwRVFubGlWekZyVlRCNFRGUjZVa3BqUmtwb1RXazVjbFF5ZUdoVWJVcElZVEJzZWxSWVNrNWhNV2hDV1ZaRk0ySkhOVlZVVjBaeFZWZHdRMUZWTVVKT1JXUkNUVlpXYTFKSVpFWlJaMjkyWkRGR1JsRllaRXBSTTBKRlVWWkNRMW93TlZkVFJrcE9VV3RHYlU5RlZrTldSVVpGVVZaR1NVd3dNVU5OUldSQ1RWWldhMUpIWkZKV01FcERWVEJaY2xWcVl6SmxSbFUwVm5sMFUxZHRPVFZUUnpCMlEyNUdXRmxYV2twV2JIQlpaREp3UWxNd1NtNWFNMFp2WVRKd1VGVkdSbEpTUlVadVZHdHdRbEpGU2toUlYyeEdVVmhGZG1WSGJFbFBWelZVWVRKS2RVMUhVbnBOUlhBelUxZG9jbFJFVW5SVGJtTTFWbXRyUzFwcmR6Tk9WbHBHV1Zoc2VWWjZTazVUVlRrelVUQnNVbEV3VWpaTlZ6bFhWRk4wVGxaV1dYcGpSVXBIVW10T1NrNHpjRFJoYldoUFVXNUtWbFF3V25sU1ZFNVRZbTV2ZWsxRlNuQmtNbWQyV2xWRk9WQlJiM1JNVXpCMFRGVldUMUpEUWtSU1ZrcFZVMVZhU2xFd1JsVlNVekIwVEZNd2RFTm5QVDBLSUNBZ0lITmxjblpsY2pvZ2FIUjBjSE02THk4eE1qY3VNQzR3TGpFNk5qUTBNd29nSUc1aGJXVTZJR1JsWm1GMWJIUUtZMjl1ZEdWNGRITTZDaTBnWTI5dWRHVjRkRG9LSUNBZ0lHTnNkWE4wWlhJNklHUmxabUYxYkhRS0lDQWdJRzVoYldWemNHRmpaVG9nYUdGeWRtVnpkR1Z5TFhONWMzUmxiUW9nSUNBZ2RYTmxjam9nWTJ4dmRXUXRjSEp2ZG1sa1pYSXRhR0Z5ZG1WemRHVnlMV2hoY25abGMzUmxjaTF6ZVhOMFpXMHRaR1ZtWVhWc2RBb2dJRzVoYldVNklHTnNiM1ZrTFhCeWIzWnBaR1Z5TFdoaGNuWmxjM1JsY2kxb1lYSjJaWE4wWlhJdGMzbHpkR1Z0TFdSbFptRjFiSFFLWTNWeWNtVnVkQzFqYjI1MFpYaDBPaUJqYkc5MVpDMXdjbTkyYVdSbGNpMW9ZWEoyWlhOMFpYSXRhR0Z5ZG1WemRHVnlMWE41YzNSbGJTMWtaV1poZFd4MENtdHBibVE2SUVOdmJtWnBad3AxYzJWeWN6b0tMU0J1WVcxbE9pQmpiRzkxWkMxd2NtOTJhV1JsY2kxb1lYSjJaWE4wWlhJdGFHRnlkbVZ6ZEdWeUxYTjVjM1JsYlMxa1pXWmhkV3gwQ2lBZ2RYTmxjam9LSUNBZ0lIUnZhMlZ1T2lCbGVVcG9Za2RqYVU5cFNsTlZla2t4VG1sSmMwbHRkSEJhUTBrMlNXeEJkR05XUWpOTVZGWnhXV2t4VFU5R2NFMVJNVUp6VlRGQ1JWTXhRbVpXZWtVeFpEQktiRmx1YUU1WFNGWTJWR3BzV2xOdWFIVlZNazFwWmxFdVpYbEtjR016VFdsUGFVcHlaRmRLYkdOdE5XeGtSMVo2VEROT2JHTnVXbkJaTWxab1dUSk9kbVJYTlRCSmFYZHBZVE5XYVZwWVNuVmFXRkpzWTNrMWNHSjVPWHBhV0VveVlWZE9iRmxYVG1waU0xWjFaRU01ZFZsWE1XeGpNMEpvV1RKVmFVOXBTbTlaV0VveVdsaE9NRnBZU1hSak0yeDZaRWRXZEVscGQybGhNMVpwV2xoS2RWcFlVbXhqZVRWd1luazVlbHBZU2pKaFYwNXNXVmRPYW1JelZuVmtRemw2V2xkT2VWcFlVWFZpYlVaMFdsTkpOa2x0VG5OaU0xWnJURmhDZVdJelduQmFSMVo1VEZkb2FHTnVXbXhqTTFKc1kya3hNR0l5ZEd4aWFVbHpTVzEwTVZsdFZubGliVll3V2xoTmRXRlhPSFpqTWxaNVpHMXNhbHBYUm1wWk1qa3hZbTVSZG1NeVZubGtiV3hxV2xNeGFGa3lUblprVnpVd1RHMDFhR0pYVldsUGFVcHFZa2M1TVZwRE1YZGpiVGt5WVZkU2JHTnBNVzlaV0VveVdsaE9NRnBZU1dsTVEwcHlaRmRLYkdOdE5XeGtSMVo2VEcxc2Rrd3pUbXhqYmxwd1dUSldhRmt5VG5aa1Z6VXdURE5PYkdOdVduQlpNbFYwV1ZkT2FtSXpWblZrUXpVeFlWZFJhVTlwU1ROT2FsWnRUVlJqZDFwRE1EVmFiVlUxVEZSU2FrNXRWWFJaVkZsNVRXa3hhazF0VVROWlYxVXpUMGRXYWs5WFNXbE1RMHA2WkZkSmFVOXBTbnBsV0U0d1dsY3dObU15Vm5sa2JXeHFXbGRHYWxreU9URmlibEUyWVVkR2VXUnRWbnBrUjFaNVRGaE9OV016VW14aVZIQnFZa2M1TVZwRE1YZGpiVGt5WVZkU2JHTnBNVzlaV0VveVdsaE9NRnBZU1dsbVVTNUNkbWRyYjJaSGFubHFTMEpWV1VWYWVsZFBWbE5STWxoSlF5MTZaa3huWVVsRllUbHJMVVZsY1Y5amNXVk1TR1ZPTjJsdVlsb3RkWEZPWnpOVGRuTlZOVVZ0V0U5SllrRTFhazkwTjNOeFFrOWtOM0ZKZW5KRVpuUnJhSFZVVEhnMFdrTTVaSFJwTVVwM05HWldSM3AzVGpKNU4wRnFUSEZXTW1oSWFreHJUMlJrV2kxM1MxbEpWbk0wZHkwMFQxSlVTV0pCWkc5ZlZucEtRbWRUVms5S1ZXbHVWblpPVUVkV09XWlVOREJzYkUxdU56VkdaWGsyV1dnNE5GQm5aSEZUWTB0dmJVMU1jR1JSYkhWNGMyeDRVR28xTWw4eVZUQlhNbGRaUW5jMFIwbzRUMkpPUjFvdFl6STFNbU5tUm0xNGEydGFXamRVU1hOc1FWWnJXSGhxWWxad2NIWm1Nelp3U21wMExYVkRTRkZ3TVdaSFJIQllRbXh2ZHpOTFptbzViWGhtZWxkM2FscEhURlJ5TVZoTVJHUlVRMFZDUnpreFVGa3pXVkZVTjJRMlVXUXdhMEUyUjA4NGNtbFFla3RUTFhOWlZuY0sK
