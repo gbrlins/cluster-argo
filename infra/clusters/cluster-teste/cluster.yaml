@@ -3,54 +3,34 @@ apiVersion: provisioning.cattle.io/v1
 kind: Cluster
 metadata:
   name: cluster-argo
-  annotations: {}
-  labels: {}
   namespace: fleet-default
 spec:
   cloudCredentialSecretName: cattle-global-data:cc-kl7d9
-  clusterAgentDeploymentCustomization:
-    appendTolerations: []
-    overrideAffinity: {}
-    overrideResourceRequirements: {}
-  defaultPodSecurityAdmissionConfigurationTemplateName: ''
-  fleetAgentDeploymentCustomization:
-    appendTolerations: []
-    overrideAffinity: {}
-    overrideResourceRequirements: {}
   kubernetesVersion: v1.34.5+rke2r1
   localClusterAuthEndpoint:
     enabled: false
   rkeConfig:
-    additionalManifest: |2-
-        apiVersion: helm.cattle.io/v1
-        kind: HelmChart
-        metadata:
-          name: harvester-cloud-provider
-          namespace: kube-system
-        spec:
-          targetNamespace: kube-system
-          bootstrap: true
-          repo: https://raw.githubusercontent.com/rancher/charts/dev-v2.9
-          chart: harvester-cloud-provider
-          version: 104.0.2+up0.2.6
-          helmVersion: v3
-          valuesContent: |-
-            global:
-              cattle:
-                clusterName: cluster-argo
+    additionalManifest: |
+      apiVersion: helm.cattle.io/v1
+      kind: HelmChart
+      metadata:
+        name: harvester-cloud-provider
+        namespace: kube-system
+      spec:
+        targetNamespace: kube-system
+        bootstrap: true
+        repo: https://raw.githubusercontent.com/rancher/charts/dev-v2.9
+        chart: harvester-cloud-provider
+        version: 104.0.2+up0.2.6
+        helmVersion: v3
+        valuesContent: |-
+          global:
+            cattle:
+              clusterName: cluster-argo
     chartValues:
-      harvester-cloud-provider:
-        global:
-          cattle:
-            clusterName: cluster-argo
-        cloudConfigPath: /var/lib/rancher/rke2/etc/config-files/cloud-provider-config
       rke2-calico: {}
-    dataDirectories:
-      k8sDistro: ''
-      provisioning: ''
-      systemAgent: ''
     etcd:
-      disableSnapshots: true
+      disableSnapshots: false
       snapshotRetention: 5
       snapshotScheduleCron: 0 */5 * * *
     machineGlobalConfig:
@@ -62,47 +42,28 @@ spec:
         etcdRole: true
         controlPlaneRole: true
         workerRole: true
-        hostnamePrefix: ''
         quantity: 1
-        unhealthyNodeTimeout: 0m
         machineConfigRef:
           kind: HarvesterConfig
-          name: nc-cluster-argo-pool1-5dnmb
+          name: nc-cluster-argo-pool1-ztmpl
         drainBeforeDelete: true
-        labels: {}
     machineSelectorConfig:
       - config:
-          cloud-provider-config: secret://fleet-default:harvesterconfigpt42m
-          cloud-provider-name: harvester
+          cloud-provider-name: external
           protect-kernel-defaults: false
-    networking: {}
-    registries:
-      configs: {}
-      mirrors: {}
     upgradeStrategy:
       controlPlaneConcurrency: '1'
       controlPlaneDrainOptions:
         deleteEmptyDirData: true
-        disableEviction: false
         enabled: false
-        force: false
-        gracePeriod: -1
         ignoreDaemonSets: true
-        skipWaitForDeleteTimeoutSeconds: 0
         timeout: 120
       workerConcurrency: '1'
       workerDrainOptions:
         deleteEmptyDirData: true
-        disableEviction: false
         enabled: false
-        force: false
-        gracePeriod: -1
         ignoreDaemonSets: true
-        skipWaitForDeleteTimeoutSeconds: 0
         timeout: 120
-  machineSelectorConfig:
-    - config: {}
-__clone: true
 ---
 apiVersion: rke-machine-config.cattle.io/v1
 cloudConfig: ''
@@ -112,7 +73,7 @@ clusterType: ''
 cpuCount: '2'
 cpuPinning: false
 diskBus: ''
-diskInfo: '{"disks":[{"imageName":"labs/image-dd6jz","bootOrder":1,"size":40}]}'
+diskInfo: '{"disks":[{"imageName":"labs/image-5wb4q","bootOrder":1,"size":40}]}'
 diskSize: '0'
 enableEfi: false
 enableSecureBoot: false
@@ -125,16 +86,59 @@ kubeconfigContent: ''
 memorySize: '4'
 metadata:
   annotations:
+    field.cattle.io/creatorId: user-xtskb
+    ownerBindingsCreated: 'true'
+  creationTimestamp: '2026-03-31T19:54:41Z'
   generateName: nc-cluster-argo-pool1-
+  generation: 1
   managedFields:
     - apiVersion: rke-machine-config.cattle.io/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:cloudConfig: {}
+        f:clusterId: {}
+        f:clusterName: {}
+        f:clusterType: {}
+        f:cpuCount: {}
+        f:cpuPinning: {}
+        f:diskBus: {}
+        f:diskInfo: {}
+        f:diskSize: {}
+        f:enableEfi: {}
+        f:enableSecureBoot: {}
+        f:enableTpm: {}
+        f:imageName: {}
+        f:isolateEmulatorThread: {}
+        f:keyPairName: {}
+        f:kubeconfigContent: {}
+        f:memorySize: {}
+        f:metadata:
+          f:annotations:
+            f:ownerBindingsCreated: {}
+          f:generateName: {}
+        f:networkData: {}
+        f:networkInfo: {}
+        f:networkModel: {}
+        f:networkName: {}
+        f:networkType: {}
+        f:reservedMemorySize: {}
+        f:sshPassword: {}
+        f:sshPort: {}
+        f:sshPrivateKeyPath: {}
+        f:sshUser: {}
+        f:userData: {}
+        f:vgpuInfo: {}
+        f:vmAffinity: {}
+        f:vmNamespace: {}
       manager: rancher
-  name: nc-cluster-argo-pool1-5dnmb
+      operation: Update
+      time: '2026-03-31T19:54:42Z'
+  name: nc-cluster-argo-pool1-ztmpl
   namespace: fleet-default
-  resourceVersion: '80637'
-  uid: b3ee210c-33de-4cd2-8345-e378b191f920
+  resourceVersion: '56958451'
+  uid: f552ea94-22d1-4731-bf57-3a9574d8a99c
 networkData: >-
-  bmV0d29yazoKICB2ZXJzaW9uOiAyCiAgZXRoZXJuZXRzOgogICAgZXRoMDoKICAgICAgZGhjcDQ6IHRydWUKICAgICAgZGhjcDY6IGZhbHNlCiAgICAgIG5hbWVzZXJ2ZXJzOgogICAgICAgIGFkZHJlc3NlczoKICAgICAgICAgIC0gMTkyLjE2OC4xLjI0CiAgICAgICAgICAtIDEuMS4xLjE=
+  I2Nsb3VkLWNvbmZpZwpuZXR3b3JrOgogIHZlcnNpb246IDEKICBjb25maWc6CiAgICAtIHR5cGU6IHBoeXNpY2FsCiAgICAgIG5hbWU6IGV0aDAKICAgICAgc3VibmV0czoKICAgICAgICAtIHR5cGU6IGRoY3A=
 networkInfo: '{"interfaces":[{"networkName":"default/local-net","macAddress":""}]}'
 networkModel: ''
 networkName: ''
@@ -145,7 +149,7 @@ sshPort: '22'
 sshPrivateKeyPath: ''
 sshUser: sles
 userData: >-
-  I2Nsb3VkLWNvbmZpZwp3cml0ZV9maWxlczoKLSBlbmNvZGluZzogYjY0CiAgY29udGVudDogWVhCcFZtVnljMmx2YmpvZ2RqRUtZMngxYzNSbGNuTTZDaTBnWTJ4MWMzUmxjam9LSUNBZ0lHTmxjblJwWm1sallYUmxMV0YxZEdodmNtbDBlUzFrWVhSaE9pQk1VekIwVEZNeFExSlZaRXBVYVVKRVVsWktWVk5WV2twUk1FWlZVbE13ZEV4VE1IUkRhekZLVTFWS2JHRnJUa1JSVmtseVdqQkdNMU5WU2tKYU1HeERVVlZTUWxNd1NtNWFNMFp2WVRKd1VGVkdSbEpTUlVaeFVWZDBUbFV3YkROVFZVWmFVa1phVWxWVlVrVlJiWGcxV1ZSS1ZtVlZlRmxVYlhkTFdUSTFZV0pIVG5CTlYzQmFWbFZHTkZSdWNGcGxSVGxWVWxod1QxWkhUalZVVlVrd1YwVlNWVk5VUms1V1JVWTJWRlpTUm1WVk1YRlhXR2hPWWtjNVdWSkdVazVOVlRGVlVWaHNVRlpGVmpWVVYzQmFaVUZ3VG1KSE9UTlRhMUpHWVZVeFJGRlZaRUpOVmxaR1VWaGtNMWR0VG5Sa1IzaE9ZVlJHTmxkc2FFdE5iSEJaVTFoU1drMXJXa0pVVmxKcVRXc3hWV0V6YUU1bGJGVjZWRmR3UTFkck1VTlVWV1JEWlZoR1NFTnNUazVPUkd4Q1dqQldTRkV3VG5oU01VNU9Ua1JzUW1Rd1ZrbFJWRUpLVVZWS1RHRlZhSFpPYWxaeVMzcG9ZVk5WZEVKUFdFSkxTekJhTkZGVmFGQlZSVlp4WWtSc1NsSXlhSEprYWtwT1N6QnNSRTVxVlV0alJHeHFUbFJLVTFwRVFubGlWekZyVlRCNFRGUjZVa3BqUmtwb1RXazVjbFF5ZUdoVWJVcElZVEJzZWxSWVNrNWhNV2hDV1ZaRk0ySkhOVlZVVjBaeFZWZHdRMUZWTVVKT1JXUkNUVlpXYTFKSVpFWlJaMjkyWkRGR1JsRllaRXBSTTBKRlVWWkNRMW93TlZkVFJrcE9VV3RHYlU5RlZrTldSVVpGVVZaR1NVd3dNVU5OUldSQ1RWWldhMUpIWkZKV01FcERWVEJaY2xWcVl6SmxSbFUwVm5sMFUxZHRPVFZUUnpCMlEyNUdXRmxYV2twV2JIQlpaREp3UWxNd1NtNWFNMFp2WVRKd1VGVkdSbEpTUlVadVZHdHdRbEpGU2toUlYyeEdVVmhGZG1WSGJFbFBWelZVWVRKS2RVMUhVbnBOUlhBelUxZG9jbFJFVW5SVGJtTTFWbXRyUzFwcmR6Tk9WbHBHV1Zoc2VWWjZTazVUVlRrelVUQnNVbEV3VWpaTlZ6bFhWRk4wVGxaV1dYcGpSVXBIVW10T1NrNHpjRFJoYldoUFVXNUtWbFF3V25sU1ZFNVRZbTV2ZWsxRlNuQmtNbWQyV2xWRk9WQlJiM1JNVXpCMFRGVldUMUpEUWtSU1ZrcFZVMVZhU2xFd1JsVlNVekIwVEZNd2RFTm5QVDBLSUNBZ0lITmxjblpsY2pvZ2FIUjBjSE02THk4eE1qY3VNQzR3TGpFNk5qUTBNd29nSUc1aGJXVTZJR1JsWm1GMWJIUUtZMjl1ZEdWNGRITTZDaTBnWTI5dWRHVjRkRG9LSUNBZ0lHTnNkWE4wWlhJNklHUmxabUYxYkhRS0lDQWdJRzVoYldWemNHRmpaVG9nYUdGeWRtVnpkR1Z5TFhONWMzUmxiUW9nSUNBZ2RYTmxjam9nWTJ4dmRXUXRjSEp2ZG1sa1pYSXRhR0Z5ZG1WemRHVnlMV2hoY25abGMzUmxjaTF6ZVhOMFpXMHRaR1ZtWVhWc2RBb2dJRzVoYldVNklHTnNiM1ZrTFhCeWIzWnBaR1Z5TFdoaGNuWmxjM1JsY2kxb1lYSjJaWE4wWlhJdGMzbHpkR1Z0TFdSbFptRjFiSFFLWTNWeWNtVnVkQzFqYjI1MFpYaDBPaUJqYkc5MVpDMXdjbTkyYVdSbGNpMW9ZWEoyWlhOMFpYSXRhR0Z5ZG1WemRHVnlMWE41YzNSbGJTMWtaV1poZFd4MENtdHBibVE2SUVOdmJtWnBad3AxYzJWeWN6b0tMU0J1WVcxbE9pQmpiRzkxWkMxd2NtOTJhV1JsY2kxb1lYSjJaWE4wWlhJdGFHRnlkbVZ6ZEdWeUxYTjVjM1JsYlMxa1pXWmhkV3gwQ2lBZ2RYTmxjam9LSUNBZ0lIUnZhMlZ1T2lCbGVVcG9Za2RqYVU5cFNsTlZla2t4VG1sSmMwbHRkSEJhUTBrMlNXeEJkR05XUWpOTVZGWnhXV2t4VFU5R2NFMVJNVUp6VlRGQ1JWTXhRbVpXZWtVeFpEQktiRmx1YUU1WFNGWTJWR3BzV2xOdWFIVlZNazFwWmxFdVpYbEtjR016VFdsUGFVcHlaRmRLYkdOdE5XeGtSMVo2VEROT2JHTnVXbkJaTWxab1dUSk9kbVJYTlRCSmFYZHBZVE5XYVZwWVNuVmFXRkpzWTNrMWNHSjVPWHBhV0VveVlWZE9iRmxYVG1waU0xWjFaRU01ZFZsWE1XeGpNMEpvV1RKVmFVOXBTbTlaV0VveVdsaE9NRnBZU1hSak0yeDZaRWRXZEVscGQybGhNMVpwV2xoS2RWcFlVbXhqZVRWd1luazVlbHBZU2pKaFYwNXNXVmRPYW1JelZuVmtRemw2V2xkT2VWcFlVWFZpYlVaMFdsTkpOa2x0VG5OaU0xWnJURmhDZVdJelduQmFSMVo1VEZkb2FHTnVXbXhqTTFKc1kya3hNR0l5ZEd4aWFVbHpTVzEwTVZsdFZubGliVll3V2xoTmRXRlhPSFpqTWxaNVpHMXNhbHBYUm1wWk1qa3hZbTVSZG1NeVZubGtiV3hxV2xNeGFGa3lUblprVnpVd1RHMDFhR0pYVldsUGFVcHFZa2M1TVZwRE1YZGpiVGt5WVZkU2JHTnBNVzlaV0VveVdsaE9NRnBZU1dsTVEwcHlaRmRLYkdOdE5XeGtSMVo2VEcxc2Rrd3pUbXhqYmxwd1dUSldhRmt5VG5aa1Z6VXdURE5PYkdOdVduQlpNbFYwV1ZkT2FtSXpWblZrUXpVeFlWZFJhVTlwU1ROT2FsWnRUVlJqZDFwRE1EVmFiVlUxVEZSU2FrNXRWWFJaVkZsNVRXa3hhazF0VVROWlYxVXpUMGRXYWs5WFNXbE1RMHA2WkZkSmFVOXBTbnBsV0U0d1dsY3dObU15Vm5sa2JXeHFXbGRHYWxreU9URmlibEUyWVVkR2VXUnRWbnBrUjFaNVRGaE9OV016VW14aVZIQnFZa2M1TVZwRE1YZGpiVGt5WVZkU2JHTnBNVzlaV0VveVdsaE9NRnBZU1dsbVVTNUNkbWRyYjJaSGFubHFTMEpWV1VWYWVsZFBWbE5STWxoSlF5MTZaa3huWVVsRllUbHJMVVZsY1Y5amNXVk1TR1ZPTjJsdVlsb3RkWEZPWnpOVGRuTlZOVVZ0V0U5SllrRTFhazkwTjNOeFFrOWtOM0ZKZW5KRVpuUnJhSFZVVEhnMFdrTTVaSFJwTVVwM05HWldSM3AzVGpKNU4wRnFUSEZXTW1oSWFreHJUMlJrV2kxM1MxbEpWbk0wZHkwMFQxSlVTV0pCWkc5ZlZucEtRbWRUVms5S1ZXbHVWblpPVUVkV09XWlVOREJzYkUxdU56VkdaWGsyV1dnNE5GQm5aSEZUWTB0dmJVMU1jR1JSYkhWNGMyeDRVR28xTWw4eVZUQlhNbGRaUW5jMFIwbzRUMkpPUjFvdFl6STFNbU5tUm0xNGEydGFXamRVU1hOc1FWWnJXSGhxWWxad2NIWm1Nelp3U21wMExYVkRTRkZ3TVdaSFJIQllRbXh2ZHpOTFptbzViWGhtZWxkM2FscEhURlJ5TVZoTVJHUlVRMFZDUnpreFVGa3pXVkZVTjJRMlVXUXdhMEUyUjA4NGNtbFFla3RUTFhOWlZuY0sKICBvd25lcjogcm9vdDpyb290CiAgcGF0aDogL2V0Yy9rdWJlcm5ldGVzL2Nsb3VkLWNvbmZpZwogIHBlcm1pc3Npb25zOiAnMDY0NCcKY2hwYXNzd2Q6CiAgbGlzdDogfAogICAgcm9vdDokNiRTYWxUc2FMdCQ0N3dKZ09GMkFaRktZaVN4REtNOGJlUnlJTTVKWWcyOGxnRWlyeTI1VjVGYkM0bkR1azlPSHB4QzBYdHNKa1kxT1laTllIV01uVExoWHNnUHdMNVNTLgogICAgc2xlczokNiRTYWxUc2FMdCQ0N3dKZ09GMkFaRktZaVN4REtNOGJlUnlJTTVKWWcyOGxnRWlyeTI1VjVGYkM0bkR1azlPSHB4QzBYdHNKa1kxT1laTllIV01uVExoWHNnUHdMNVNTLgogIGV4cGlyZTogRmFsc2UKYm9vdGNtZDoKICAtIFsgc3VzZWNvbm5lY3QsIC1lLCAiZXJpY28ubWVuZG9uY2FAc3VzZS5jb20iLCAtciwgIklOVEVSTkFMLVVTRS1PTkxZLWRiYjktNjVmMSIgXQpwYWNrYWdlczoKICAtIGlwdGFibGVzCiAgLSBjdXJsCiAgLSB3Z2V0CnJ1bmNtZDoKICAtIGVjaG8gIkNvbmZpZ3VyYcOnw6NvIGZpbmFsaXphZGEgZW0gJChkYXRlKSIgPiAvdmFyL2xvZy9jbG91ZC1jb25maWctZG9uZS5sb2c=
+  I2Nsb3VkLWNvbmZpZwp3cml0ZV9maWxlczoKLSBlbmNvZGluZzogYjY0CiAgY29udGVudDogWVhCcFZtVnljMmx2YmpvZ2RqRUtZMngxYzNSbGNuTTZDaTBnWTJ4MWMzUmxjam9LSUNBZ0lHTmxjblJwWm1sallYUmxMV0YxZEdodmNtbDBlUzFrWVhSaE9pQk1VekIwVEZNeFExSlZaRXBVYVVKRVVsWktWVk5WV2twUk1FWlZVbE13ZEV4VE1IUkRhekZLVTFWS2JGWkZUa1JSVmtseVdqQkdNMU5WU2tKYU1HeERVVlZTUWxNd1NtNWFNMFp2WVRKd1VGVkdSbEpTUlVaeFVWZDBUbFV3YkROVFZVWmFVa1phVWxWVlVrVlJiWGcxV1ZSS1ZtVlZlRmxVYlhkTFdUSTFZV0pIVG5CTlYzQmFWbFZHTkZSdWNGcE5WVFZ4VjFST1VGWkZhekZVVlVrd1YwVlNWVk5VUms1V1JXdzBWRmh3U21Wck1WVmFla0pRVm0wNVdWSkdVazVOVlRGVlUxaG9UbFpGYkRaVVZsSnVUVUZ3VUZadE9UTlRhMUpHWVZVeFJGRlZaRUpOVmxaR1VWaGtNMWR0VG5Sa1IzaE9ZVlJHTmxkc2FFdE5iSEJaVTFoU1drMXJXa0pVVmxKcVRXczFWVmRVU2s5bGJYUTFWREZTUTFkck1VTlVWV1JEWlZoR1NFTnNUazVPUkd4Q1dqQldTRkV3VG5oU01VNU9Ua1JzUW1Rd1ZrbFJWRUpLVVZWS1Nsa3ljRk5VU0ZKTVYxVjBhbUpWV2pOU2JsWkdXak5LVTFSVE9VdGpSMVkxVlRJMVZVdDZTblJYVjJjd1YyeFdVMkl3UlV0alIzTXlWa2hhY21SWE5XMWFNREZMV1RCS1JWSkVSbFZQVlU1dlZYcHJkMlZZUWt4a2VrcDJWVlpWZUZKclNsRk5lazV4VDFkU2VFNHllSGhhUlRseFZWZHdRMUZWTVVKT1JXUkNUVlpXYTFKSVpFWlJaMjkyWkRGR1JsRllaRXBSTTBKRlVWWkNRMW93TlZkVFJrcE9VV3RHYlU5RlZrTldSVVpGVVZaR1NVd3dNVU5OUldSQ1RWWldhMUpIWkZKV01FcERWVEF4YjA1WFkzaGxSM1EyVlZWT1ZrNXBkSGhaVms0eFEyeGtNRlJGV25sTU1VWnRWMWR3UWxNd1NtNWFNMFp2WVRKd1VGVkdSbEpTUlVadVZHdHNRbEpGU2tkUlYyeENUbGhHVWxKSVRsRmFSbEpIVTBkME1WRXdkR3RXUlRseFYyNWFRMVJyV25oa1YxcDZWVmRaUzFFeFJteFhSazVFVW01V2NsVlViRkJQU0dSS1lVVkdUbFZ0V2xkT1ZHeFdaVzFTZVUxdVducFpibVJ6VERCNFdsTnJNWFpoVm1oMVVXdGpNR0l6Y0ZST1JtaEdUVVJvYVZkSFdscFNWMmh1UTJrd2RFeFRNSFJTVlRWRlNVVk9SbFZzVWtwU2EyeEVVVlpTUmt4VE1IUk1VekJMQ2lBZ0lDQnpaWEoyWlhJNklHaDBkSEE2THk4eE1qY3VNQzR3TGpFNk9EQXdNUW9nSUc1aGJXVTZJR05zZFhOMFpYSUtZMjl1ZEdWNGRITTZDaTBnWTI5dWRHVjRkRG9LSUNBZ0lHTnNkWE4wWlhJNklHTnNkWE4wWlhJS0lDQWdJRzVoYldWemNHRmpaVG9nYUdGeWRtVnpkR1Z5TFhONWMzUmxiUW9nSUNBZ2RYTmxjam9nWTJ4dmRXUXRjSEp2ZG1sa1pYSXRhR0Z5ZG1WemRHVnlMV2hoY25abGMzUmxjaTF6ZVhOMFpXMHRZMngxYzNSbGNnb2dJRzVoYldVNklHTnNiM1ZrTFhCeWIzWnBaR1Z5TFdoaGNuWmxjM1JsY2kxb1lYSjJaWE4wWlhJdGMzbHpkR1Z0TFdOc2RYTjBaWElLWTNWeWNtVnVkQzFqYjI1MFpYaDBPaUJqYkc5MVpDMXdjbTkyYVdSbGNpMW9ZWEoyWlhOMFpYSXRhR0Z5ZG1WemRHVnlMWE41YzNSbGJTMWpiSFZ6ZEdWeUNtdHBibVE2SUVOdmJtWnBad3B3Y21WbVpYSmxibU5sY3pvZ2UzMEtkWE5sY25NNkNpMGdibUZ0WlRvZ1kyeHZkV1F0Y0hKdmRtbGtaWEl0YUdGeWRtVnpkR1Z5TFdoaGNuWmxjM1JsY2kxemVYTjBaVzB0WTJ4MWMzUmxjZ29nSUhWelpYSTZDaUFnSUNCMGIydGxiam9nWlhsS2FHSkhZMmxQYVVwVFZYcEpNVTVwU1hOSmJYUndXa05KTmtsdVJuQlZSMDVFVW1wU1dXUXpRbkJTTWpGU1VtMWtlVTB3T1c5aVNFcHdaRVZLTmxaSGVHNVJWVlV5VG1wR01HUXdXbFpsVlRoM1UxYzRhV1pSTG1WNVNuQmpNMDFwVDJsS2NtUlhTbXhqYlRWc1pFZFdla3d6VG14amJscHdXVEpXYUZreVRuWmtWelV3U1dsM2FXRXpWbWxhV0VwMVdsaFNiR041TlhCaWVUbDZXbGhLTW1GWFRteFpWMDVxWWpOV2RXUkRPWFZaVnpGc1l6TkNhRmt5VldsUGFVcHZXVmhLTWxwWVRqQmFXRWwwWXpOc2VtUkhWblJKYVhkcFlUTldhVnBZU25WYVdGSnNZM2sxY0dKNU9YcGFXRW95WVZkT2JGbFhUbXBpTTFaMVpFTTVlbHBYVG5sYVdGRjFZbTFHZEZwVFNUWkpiVTV6WWpOV2EweFlRbmxpTTFwd1drZFdlVXhYYUdoamJscHNZek5TYkdOcE1UQmlNblJzWW1sSmMwbHRkREZaYlZaNVltMVdNRnBZVFhWaFZ6aDJZekpXZVdSdGJHcGFWMFpxV1RJNU1XSnVVWFpqTWxaNVpHMXNhbHBUTVdoWk1rNTJaRmMxTUV4dE5XaGlWMVZwVDJsS2FtSkhPVEZhUXpGM1kyMDVNbUZYVW14amFURnZXVmhLTWxwWVRqQmFXRWxwVEVOS2NtUlhTbXhqYlRWc1pFZFdla3h0YkhaTU0wNXNZMjVhY0ZreVZtaFpNazUyWkZjMU1Fd3pUbXhqYmxwd1dUSlZkRmxYVG1waU0xWjFaRU0xTVdGWFVXbFBhVWt4VDBSSk0wNUViR3ROVXpCNFRXcG9hMHhVVVRGTmFrbDBUMGRXYTA1RE1IaE5lazVzV2xkTk1sa3lWWGROVkdkcFRFTktlbVJYU1dsUGFVcDZaVmhPTUZwWE1EWmpNbFo1Wkcxc2FscFhSbXBaTWpreFltNVJObUZIUm5sa2JWWjZaRWRXZVV4WVRqVmpNMUpzWWxSd2FtSkhPVEZhUXpGM1kyMDVNbUZYVW14amFURnZXVmhLTWxwWVRqQmFXRWxwWmxFdWQzQkhhMm8yZFZWRFMxODBUVEJ2ZVc1d01EY3lPRE5TVldNM1JqSkNVa1ZzZFRWRldtTkdNREpTVVZBM1VqRk1URmw2ZUZKTlIydEdjbVY1Y0V0ak9UbHRaVTl0ZWs5WVgyNVVTbGhPT1doWmNIcHRhbGxZWHpkTllYWXpVWGhEYlRKdllrSm1ORmg2ZUdKMUxYWnRaREpqTlZVM01UaG9Zek41UWtSMFlqSlpUVEpvVERacE0zSktPR2RKVFY5NE1GbGZaRXBvVUhCcGNIaDRiWEZQV21GMlR6RlZTME5hYW5weVlYZERUalkxYVVRNUxWVnFlbTlyV1ZsS1oyNDRkbkl0WDJsbE9WQTBkMkUyTWpsaGQyeDRjME5TYUZWR1gyNXFaM0U1ZEZST04ybG9Oa1pKZDE5VFpXNHdZWFpaV0dwSGJUaG5UMU5WUTFvMVVrWnZSbkZaVTBOUFQxa3pNVXhmZERjNVVGcEZkemt3WW01VWNXaFVTM0l4Y2poV2IxUkJVVk5EWnpkSlpVVmhUM0JwU1hBeU16SldjakUzT0Y4emVITTVhbFZOZG10S0xVazJiM1F0VEcxclVsQTRjR1J2U2s1UkNnPT0KICBvd25lcjogcm9vdDpyb290CiAgcGF0aDogL2V0Yy9rdWJlcm5ldGVzL2Nsb3VkLWNvbmZpZwogIHBlcm1pc3Npb25zOiAnMDY0NCcKY2hwYXNzd2Q6CiAgbGlzdDogfAogICAgcm9vdDokNiRTYWxUc2FMdCQ0N3dKZ09GMkFaRktZaVN4REtNOGJlUnlJTTVKWWcyOGxnRWlyeTI1VjVGYkM0bkR1azlPSHB4QzBYdHNKa1kxT1laTllIV01uVExoWHNnUHdMNVNTLgogICAgc2xlczokNiRTYWxUc2FMdCQ0N3dKZ09GMkFaRktZaVN4REtNOGJlUnlJTTVKWWcyOGxnRWlyeTI1VjVGYkM0bkR1azlPSHB4QzBYdHNKa1kxT1laTllIV01uVExoWHNnUHdMNVNTLgogIGV4cGlyZTogRmFsc2UKYm9vdGNtZDoKICAtIFsgc3VzZWNvbm5lY3QsIC1lLCAiZXJpY28ubWVuZG9uY2FAc3VzZS5jb20iLCAtciwgIklOVEVSTkFMLVVTRS1PTkxZLWRiYjktNjVmMSIgXQpwYWNrYWdlczoKICAtIGlwdGFibGVzCiAgLSBjdXJsCiAgLSB3Z2V0CnJ1bmNtZDoKICAtIGVjaG8gIkNvbmZpZ3VyYcOnw6NvIGZpbmFsaXphZGEgZW0gJChkYXRlKSIgPiAvdmFyL2xvZy9jbG91ZC1jb25maWctZG9uZS5sb2c=
 vgpuInfo: ''
 vmAffinity: ''
 vmNamespace: vms
