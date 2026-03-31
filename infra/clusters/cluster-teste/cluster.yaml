@@ -73,7 +73,7 @@ clusterType: ''
 cpuCount: '2'
 cpuPinning: false
 diskBus: ''
-diskInfo: '{"disks":[{"imageName":"labs/image-dd6jz","bootOrder":1,"size":40}]}'
+diskInfo: '{"disks":[{"imageName":"images/image-crplc","bootOrder":1,"size":40}]}'
 diskSize: '0'
 enableEfi: false
 enableSecureBoot: false
@@ -139,7 +139,7 @@ metadata:
   uid: f552ea94-22d1-4731-bf57-3a9574d8a99c
 networkData: >-
   I2Nsb3VkLWNvbmZpZwpuZXR3b3JrOgogIHZlcnNpb246IDEKICBjb25maWc6CiAgICAtIHR5cGU6IHBoeXNpY2FsCiAgICAgIG5hbWU6IGV0aDAKICAgICAgc3VibmV0czoKICAgICAgICAtIHR5cGU6IGRoY3A=
-networkInfo: '{"interfaces":[{"networkName":"default/local-net","macAddress":""}]}'
+networkInfo: '{"interfaces":[{"networkName":"network/vm-net","macAddress":""}]}'
 networkModel: ''
 networkName: ''
 networkType: ''
