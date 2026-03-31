@@ -73,7 +73,7 @@ clusterType: ''
 cpuCount: '2'
 cpuPinning: false
 diskBus: ''
-diskInfo: '{"disks":[{"imageName":"labs/image-5wb4q","bootOrder":1,"size":40}]}'
+diskInfo: '{"disks":[{"imageName":"labs/image-dd6jz","bootOrder":1,"size":40}]}'
 diskSize: '0'
 enableEfi: false
 enableSecureBoot: false
